@@ -27,6 +27,7 @@ class PipelineResult:
     case_input: CaseInput
     docx_path: str
     evaluation_report: EvaluationReport
+    paragraphs: list = field(default_factory=list)
     reference_structure_summary: dict = field(default_factory=dict)
     warnings: list[str] = field(default_factory=list)
 
@@ -100,9 +101,31 @@ def run_pipeline(
         case_input=case_input,
         docx_path=output_docx_path,
         evaluation_report=report,
+        paragraphs=paragraphs,
         reference_structure_summary=reference_summary,
         warnings=warnings,
     )
+
+
+def inject_test_error(result: PipelineResult, corrupted_path: str) -> EvaluationReport:
+    """Makes a copy of the generated docx with a deliberately wrong
+    respondent number in the affidavit title, re-parses it, and re-runs
+    Stage 6 evaluation against the SAME case_input/paragraphs (no new LLM
+    calls) — this is what proves the deterministic checks actually catch
+    something, not just that they pass on clean input."""
+    from docx import Document
+    doc = Document(result.docx_path)
+    wrong_number = result.case_input.replying_respondent_number + 1
+    for p in doc.paragraphs:
+        if p.text.strip().upper().startswith("AFFIDAVIT IN REPLY ON BEHALF OF RESPONDENT NO"):
+            for run in p.runs:
+                run.text = run.text.replace(
+                    str(result.case_input.replying_respondent_number), str(wrong_number)
+                )
+    doc.save(corrupted_path)
+
+    corrupted_structure = doc_reader.extract_structure(corrupted_path)
+    return evaluation.evaluate(result.case_input, result.paragraphs, corrupted_structure, pre_issues=[])
 
 
 def render_report_markdown(result: PipelineResult) -> str:

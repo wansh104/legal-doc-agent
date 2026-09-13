@@ -17,7 +17,7 @@ of any detected issues with their source.
 
 ## Working link
 
-`[ADD YOUR STREAMLIT COMMUNITY CLOUD URL HERE AFTER DEPLOYING]`
+`https://legal-doc-agent-fniryowcluzxnba77lbecp.streamlit.app/`
 
 The app runs in **demo mode** with no API key required: it uses hand-verified cached
 output for the bundled Sunrise Housing / MMRDA sample case, so a reviewer can see the full

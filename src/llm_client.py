@@ -23,7 +23,7 @@ from pydantic import BaseModel
 
 T = TypeVar("T", bound=BaseModel)
 
-MODEL_NAME = "gemini-3.6-flash"
+MODEL_NAME = "gemini-3.5-flash"
 
 
 class LLMError(Exception):
