@@ -1,0 +1,11 @@
+.env
+__pycache__/
+*.pyc
+.streamlit/secrets.toml
+/tmp/
+outputs/*.pdf
+outputs/page-*.jpg
+venv/
+.venv/
+env/
+ENV/

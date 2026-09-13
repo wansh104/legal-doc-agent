@@ -1,0 +1,55 @@
+{
+  "overall_score": 100.0,
+  "dimensions": [
+    {
+      "name": "Entity Accuracy",
+      "score": 100.0,
+      "weight": 0.2,
+      "checks_passed": 9,
+      "checks_total": 9,
+      "detail": "Extracted document fields compared against CaseInput ground truth."
+    },
+    {
+      "name": "Completeness",
+      "score": 100.0,
+      "weight": 0.2,
+      "checks_passed": 2,
+      "checks_total": 2,
+      "detail": "Body paragraph count and prayer presence checked against the plan."
+    },
+    {
+      "name": "Structure",
+      "score": 100.0,
+      "weight": 0.2,
+      "checks_passed": 10,
+      "checks_total": 10,
+      "detail": "All 10 required sections from the format spec checked for presence."
+    },
+    {
+      "name": "Consistency",
+      "score": 100.0,
+      "weight": 0.15,
+      "checks_passed": 11,
+      "checks_total": 11,
+      "detail": "Respondent number, verification range, and verb-agreement checks."
+    },
+    {
+      "name": "Template Fidelity",
+      "score": 100.0,
+      "weight": 0.15,
+      "checks_passed": 7,
+      "checks_total": 7,
+      "detail": "Fixed-phrase reuse, exhibit mapping, and deponent-clause form."
+    },
+    {
+      "name": "Hallucination Check",
+      "score": 100.0,
+      "weight": 0.1,
+      "checks_passed": 7,
+      "checks_total": 7,
+      "detail": "Deterministic proxy: years/respondent numbers/exhibit labels in generated prose must trace to case input."
+    }
+  ],
+  "issues": [],
+  "scoring_explanation": "Overall score is a weighted average of six dimensions (Entity Accuracy 20%, Completeness 20%, Structure 20%, Consistency 15%, Template Fidelity 15%, Hallucination Check 10%). Each dimension's score is checks_passed / checks_total * 100, where checks come from deterministic comparisons against the case input ground truth and the fixed format spec (see 01_Affidavit_Format_Explained.pdf) — no LLM is involved in scoring."
+}
