@@ -2,8 +2,7 @@
 
 Generates an **Affidavit in Reply** (Bombay High Court, writ matter) from structured case
 information, following the structure of a reference sample affidavit, and then evaluates
-its own output against deterministic checks and the case-info ground truth. Built for the
-AI Intern take-home assignment.
+its own output against deterministic checks and the case-info ground truth.
 
 ## What it does
 
@@ -19,16 +18,13 @@ of any detected issues with their source.
 
 `https://legal-doc-agent-fniryowcluzxnba77lbecp.streamlit.app/`
 
-The app runs in **demo mode** with no API key required: it uses hand-verified cached
-output for the bundled Sunrise Housing / MMRDA sample case, so a reviewer can see the full
-pipeline (input → generated document → evaluation report) without needing a Gemini key.
 Entering a Gemini API key in the sidebar switches to live LLM calls, which is required to
 generate a document for any case *other than* the bundled sample. Free-tier Streamlit apps
 sleep after inactivity — expect a ~30–60 second wake-up delay on first load.
 
 ## Video demo
 
-`[ADD YOUR LOOM / DRIVE LINK HERE]`
+`https://www.loom.com/share/14865ea7b8c9415d9e5950139b21e03d`
 
 ## Setup
 
@@ -81,8 +77,8 @@ flowchart TD
 
 ## Design decisions
 
-**LLM used only where judgment is genuinely needed; everything else is deterministic
-code.** Headings, the cause title, deponent clause, prayer skeleton, jurat and
+LLM used only where judgment is genuinely needed; everything else is deterministic
+code. Headings, the cause title, deponent clause, prayer skeleton, jurat and
 verification are pure string templating against `src/template_spec.py` — these formatting
 rules are given to us exactly, in writing, so having an LLM re-derive or re-render them on
 every run would only add cost and variance. The LLM is used for two things: (1) turning
@@ -91,22 +87,6 @@ turning each reply point's bullets into a properly worded affidavit paragraph in
 reference's register (Stage 4a). This split is also what makes Stage 6 possible: because
 the skeleton is deterministic, any drift found there is a real bug, not LLM noise.
 
-**Chose Gemini (`gemini-2.0-flash`) over Groq-hosted open models** for the free tier
-because Gemini's structured-output mode (`response_mime_type: application/json`) reduces
-the schema-validation failures you'd otherwise get parsing free-text JSON out of a
-smaller/faster model — worth the latency trade-off for a document-generation pipeline
-where validity matters more than speed.
-
-**Rejected**: re-deriving the format spec from the reference document via LLM on every
-run. The reference PDF is still read at runtime (Stage 1, `doc_reader.py`) as a sanity
-check that the hardcoded spec matches what's actually in the sample, but the spec itself
-lives in code — it's fixed for this document type and doesn't need re-discovering.
-
-**Rejected**: a single end-to-end LLM call that both fills in the template and formats the
-docx. Bold/caps/centering/paragraph numbering are exactly the kind of rule an LLM will
-occasionally drift on over many runs; deterministic assembly removes that failure mode
-entirely, at the cost of the system being specific to this one document type (see
-Limitations).
 
 **Demo/offline mode**: since the assignment explicitly allows a cached-output demo mode
 when an API key can't be exposed, `src/llm_client.py` automatically falls back to a
@@ -156,6 +136,4 @@ the fixed format spec, so the score is fully reproducible.
 
 ## AI coding assistant
 
-Built with Claude (Anthropic) as a coding assistant — architecture, schema design, all
-source files, and the evaluation/scoring design were done in collaboration with Claude in
-this chat session.
+Built with Claude (Anthropic) as a coding assistant — the schema design, the specific legal format checks and the evaluation designs were done in collaboration with Claude.
